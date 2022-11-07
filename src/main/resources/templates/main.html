@@ -1,0 +1,201 @@
+<!doctype html>
+<html lang="en">
+
+<!-- Head -->
+<head th:replace="header :: header">
+</head>
+<body class="">
+
+<!-- Navbar -->
+<nav th:replace="navbar :: navbar">
+</nav>
+<!-- / Navbar-->
+
+<!-- Main Section-->
+<section class="mt-0 overflow-hidden ">
+    <!-- Page Content Goes Here -->
+
+    <!-- / Top banner -->
+    <section class="vh-75 vh-lg-60 container-fluid rounded overflow-hidden" data-aos="fade-in">
+        <!-- Swiper Info -->
+        <div class="swiper-container overflow-hidden rounded h-100 bg-light" data-swiper data-options='{
+              "spaceBetween": 0,
+              "slidesPerView": 1,
+              "effect": "fade",
+              "speed": 1000,
+              "loop": true,
+              "parallax": true,
+              "observer": true,
+              "observeParents": true,
+              "lazy": {
+                "loadPrevNext": true
+                },
+                "autoplay": {
+                  "delay": 5000,
+                  "disableOnInteraction": false
+              },
+              "pagination": {
+                "el": ".swiper-pagination",
+                "clickable": true
+                }
+              }'>
+            <div class="swiper-wrapper">
+
+                <!-- Slide-->
+                <div class="swiper-slide position-relative h-100 w-100">
+                    <div class="w-100 h-100 overflow-hidden position-absolute z-index-1 top-0 start-0 end-0 bottom-0">
+                        <div class="w-100 h-100 bg-img-cover bg-pos-center-center overflow-hidden" data-swiper-parallax="-100"
+                             style=" will-change: transform; background-image: url(/default/banner-1.jpg)">
+                        </div>
+                    </div>
+                    <div
+                            class="container position-relative z-index-10 d-flex h-100 align-items-start flex-column justify-content-center">
+                        <p class="title-small text-white opacity-75 mb-0" data-swiper-parallax="-100">22 FW</p>
+                        <h2 class="display-3 tracking-wide fw-bold text-uppercase tracking-wide text-white" data-swiper-parallax="100">
+                            <span class="text-outline-light">New</span> Leather Boots</h2>
+                        <div data-swiper-parallax-y="-25">
+                            <a th:href="@{productList(page=${1}, category_id=${3})}" class="btn btn-psuedo text-white" role="button">상품보기</a>
+                        </div>
+                    </div>
+                </div>
+                <!-- /Slide-->
+
+                <!-- Slide-->
+                <div class="swiper-slide position-relative h-100 w-100">
+                    <div class="w-100 h-100 overflow-hidden position-absolute z-index-1 top-0 start-0 end-0 bottom-0">
+                        <div class="w-100 h-100 bg-img-cover bg-pos-center-center overflow-hidden" data-swiper-parallax="-100"
+                             style=" will-change: transform; background-image: url(/default/banner-2.jpg)">
+                        </div>
+                    </div>
+                    <div
+                            class="container position-relative z-index-10 d-flex h-100 align-items-start flex-column justify-content-center">
+                        <p class="title-small text-white opacity-75 mb-0" data-swiper-parallax="-100">Autumn Collection</p>
+                        <h2 class="display-3 tracking-wide fw-bold text-uppercase tracking-wide text-white" data-swiper-parallax="100">
+                            New <span class="text-outline-light">Garments</span></h2>
+                        <div data-swiper-parallax-y="-25">
+                            <a th:href="@{productList(page=${1}, category_id=${7})}" class="btn btn-psuedo text-white" role="button">상품보기</a>
+                        </div>
+                    </div>
+                </div>
+                <!--/Slide-->
+
+            </div>
+
+            <div class="swiper-pagination swiper-pagination-bullet-light"></div>
+
+        </div>
+        <!-- / Swiper Info-->        </section>
+    <!--/ Top Banner-->
+
+    <div class="container-fluid" style="margin-top: 112px;">
+
+        <!-- Homepage Intro-->
+        <div class="position-relative row my-lg-7 pt-5 pt-lg-0 g-8">
+            <div class="col-12 col-md-6 position-relative z-index-20 mb-7 mb-lg-0" data-aos="fade-right">
+                <h3 class="display-3 fw-bold mb-5"><br>Mens</h3>
+                <a th:href="@{productList(page=${1}, category_id=${1})}" class="btn btn-psuedo" role="button">상품보기</a>
+            </div>
+            <div class="col-12 col-md-6 position-relative z-index-20 pe-0" data-aos="fade-left">
+                <picture class="w-100 d-block position-relative z-index-10 shadow-lg">
+                    <img class="img-fluid" src="/default/mens.jpg" alt="HTML Bootstrap Template by Pixel Rocket">
+                </picture>
+            </div>
+        </div>
+        <div class="position-relative row my-lg-7 pt-5 pt-lg-0 g-8">
+            <div class="col-12 col-md-6 position-relative z-index-20 mb-7 mb-lg-0" data-aos="fade-right">
+                <h3 class="display-3 fw-bold mb-5"><br>Womens</h3>
+                <a th:href="@{productList(page=${1}, category_id=${2})}" class="btn btn-psuedo" role="button">상품보기</a>
+            </div>
+            <div class="col-12 col-md-6 position-relative z-index-20 pe-0" data-aos="fade-left">
+                <picture class="w-100 d-block position-relative z-index-10 shadow-lg">
+                    <img class="img-fluid" src="/default/womens.jpg" alt="HTML Bootstrap Template by Pixel Rocket">
+                </picture>
+            </div>
+        </div>
+        <!-- / Homepage Intro-->
+
+        <!-- Homepage Banners-->
+        <div class="pt-7 mb-5 mb-lg-10">
+            <div class="row g-4">
+                <div class="col-12 col-xl-6 position-relative" data-aos="fade-right">
+                    <picture class="position-relative z-index-10">
+                        <img class="w-100 rounded" src="/default/acc-1.jpg" alt="HTML Bootstrap Template by Pixel Rocket">
+                    </picture>
+                    <div class="position-absolute top-0 bottom-0 start-0 end-0 d-flex justify-content-center align-items-center z-index-20">
+                        <div class="py-6 px-5 px-lg-10 text-center w-100">
+                            <h4 class="display-1 mb-3 fw-bold text-black">Accessories</h4>
+                            <a th:href="@{productList(page=${1}, category_id=${4})}" class="btn btn-psuedo text-black" role="button">상품보기</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12 col-xl-6" data-aos="fade-left">
+                    <div class="row g-4 justify-content-end">
+                        <div class="col-12 col-md-6 d-flex">
+                            <div class="card position-relative overflow-hidden">
+                                <picture class="position-relative z-index-10 d-block bg-light">
+                                    <img class="w-100 rounded" src="/default/acc-2.jpg" alt="HTML Bootstrap Template by Pixel Rocket">
+                                </picture>
+                                <div class="card-overlay">
+                                    <p class="lead fw-bolder mb-2">Ladon Black Leather</p>
+                                    <a th:href="@{productDetail(product_id=${1})}" class="btn btn-psuedo text-white py-2" role="button">상세보기</a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12 col-md-6 d-flex">
+                            <div class="card position-relative overflow-hidden">
+                                <picture class="position-relative z-index-10 d-block bg-light">
+                                    <img class="w-100 rounded" src="/default/acc-3.jpg" alt="HTML Bootstrap Template by Pixel Rocket">
+                                </picture>
+                                <div class="card-overlay">
+                                    <p class="lead fw-bolder mb-2">Bucket Hat Ament Check Mohair</p>
+                                    <a th:href="@{productDetail(product_id=${2})}" class="btn btn-psuedo text-white py-2" role="button">상세보기</a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12 col-md-6 d-flex">
+                            <div class="card position-relative overflow-hidden">
+                                <picture class="position-relative z-index-10 d-block bg-light">
+                                    <img class="w-100 rounded" src="/default/footwear-1.jpg" alt="HTML Bootstrap Template by Pixel Rocket">
+                                </picture>
+                                <div class="card-overlay">
+                                    <p class="lead fw-bolder mb-2">Camion Boot Olive Leather</p>
+                                    <a th:href="@{productDetail(product_id=${3})}" class="btn btn-psuedo text-white py-2" role="button">상세보기</a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12 col-md-6 d-flex">
+                            <div class="card position-relative overflow-hidden">
+                                <picture class="position-relative z-index-10 d-block bg-light">
+                                    <img class="w-100 rounded" src="/default/footwear-2.jpg" alt="HTML Bootstrap Template by Pixel Rocket">
+                                </picture>
+                                <div class="card-overlay">
+                                    <p class="lead fw-bolder mb-2">Cuban Boot Black</p>
+                                    <a th:href="@{productDetail(product_id=${4})}" class="btn btn-psuedo text-white py-2" role="button">상세보기</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- / Homepage Banners-->
+
+    </div>
+
+    <!-- /Page Content -->
+</section>
+<!-- / Main Section-->
+
+<!-- Footer -->
+<footer class="border-top py-5 mt-4  " th:replace="footer :: footer">
+</footer>    <!-- / Footer-->
+
+<!-- Theme JS -->
+<!-- Vendor JS -->
+<script src="/js/vendor.bundle.js"></script>
+
+<!-- Theme JS -->
+<script src="/js/theme.bundle.js"></script>
+</body>
+
+</html>

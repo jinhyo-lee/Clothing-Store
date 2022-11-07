@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="en">
+
+<!-- Head -->
+<head th:replace="header :: header">
+</head>
+<body class="">
+
+<!-- Navbar -->
+<nav th:replace="navbar :: navbar">
+</nav>
+<!-- / Navbar-->
+
+<!-- Main Section-->
+<section
+        class="mt-0 overflow-hidden vh-75 d-flex justify-content-center align-items-center p-4">
+    <!-- Page Content Goes Here -->
+
+    <!-- Login Form-->
+    <div class="col col-md-8 col-lg-6 col-xxl-5">
+        <div class="shadow-xl p-4 p-lg-5 bg-white">
+            <h1 class="text-center fw-bold mb-5 fs-2">로그인</h1>
+            <form th:action="@{login}" method="post">
+                <div class="form-group">
+                    <label class="form-label" for="login-id">아이디</label>
+                    <input type="text" name="id" class="form-control" id="login-id" placeholder="아이디를 입력해 주세요.">
+                    <div id="id-message"></div>
+                </div>
+                <div class="form-group">
+                    <label for="login-password" class="form-label d-flex justify-content-between align-items-center">
+                        비밀번호
+                    </label>
+                    <input type="password" name="password" class="form-control" id="login-password" placeholder="비밀번호를 입력해 주세요.">
+                    <div id="password-message"></div>
+                </div>
+                <div th:if="error">
+                    <p id="login-valid" style="color: #ff6666;"><a th:text="${errorMessage}"/></p>
+                </div>
+                <div class="form-check">
+                    <input type="checkbox" class="form-check-input" id="remember-me" name="remember-me" checked>
+                    <label class="form-check-label" for="remember-me">로그인 상태 유지</label>
+                </div>
+                <div class="d-flex justify-content-center">
+                    <button type="submit" class="btn btn-dark d-block w-50 my-4">로그인</button>
+                </div>
+            </form>
+            <p class="d-block text-center text-muted"><a class="text-muted" href="joinPage">회원가입</a></p>
+        </div>
+
+    </div>
+    <!-- / Login Form-->
+
+    <!-- /Page Content -->
+</section>
+<!-- / Main Section-->
+
+
+<!-- Theme JS -->
+<!-- Vendor JS -->
+<script src="/js/vendor.bundle.js"></script>
+
+<!-- Theme JS -->
+<script src="/js/theme.bundle.js"></script>
+</body>
+
+</html>

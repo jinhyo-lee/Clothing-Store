@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.prj.mapper.DashboardMapper">
+    <select id="getOrderList" parameterType="HashMap" resultType="order">
+        select *
+        from (select a.*, rownum rn
+              from (select *
+                    from detail dt
+                             left join "ORDER" od on dt.order_id = od.order_id
+                             left join product pd on dt.product_id = pd.product_id
+                    where dt.product_id in (select product_id from product)
+                      and id = #{id}
+                    order by od.order_id desc) a)
+        <![CDATA[
+        WHERE rn >= ((#{page} - 1) * 3 + 1)
+          and rn <= (#{page} * 3)
+        ]]>
+    </select>
+
+    <select id="getMileageList" parameterType="HashMap" resultType="mileage">
+        select *
+        from (select a.*, rownum rn from (select * from mileage where id = #{id} order by mileage_id desc) a)
+        <![CDATA[
+        where rn >= ((#{page} - 1) * 3 + 1)
+          and rn <= (#{page} * 3)
+        ]]>
+    </select>
+
+    <select id="getOrder" parameterType="int" resultType="order">
+        select *
+        from "ORDER"
+        where order_id = #{order_id}
+    </select>
+
+    <select id="getDetailList" parameterType="int" resultType="detail">
+        select dt.*, pd.product_name, pd.image
+        from detail dt
+                 left join product pd on dt.product_id = pd.product_id
+        where dt.order_id = #{order_id}
+        order by dt.order_id desc
+    </select>
+
+    <select id="getOrderCount" parameterType="String" resultType="int">
+        select count(dt.detail_id)
+        from detail dt
+                 left join "ORDER" od on dt.order_id = od.order_id
+        where od.id = #{id}
+    </select>
+
+    <select id="getMileageCount" parameterType="String" resultType="int">
+        select count(mileage_id)
+        from mileage
+        where id = #{id}
+    </select>
+
+    <update id="updateMember" parameterType="member">
+        update member
+        set name    = #{name},
+            email   = #{email},
+            contact = #{contact},
+            address = #{address}
+        where id = #{id}
+    </update>
+
+    <select id="getPassword" parameterType="String" resultType="String">
+        select password
+        from member
+        where id = #{id}
+    </select>
+
+    <update id="changePassword" parameterType="member">
+        update member
+        set password = #{password}
+        where id = #{id}
+    </update>
+
+    <update id="quit" parameterType="String">
+        update member
+        set enable = 0
+        where id = #{id}
+    </update>
+</mapper>

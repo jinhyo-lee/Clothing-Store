@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.prj.mapper.MemberMapper">
+    <select id="login" parameterType="member" resultType="int">
+        select count(id)
+        from member
+        where id = #{id, jdbcType=VARCHAR}
+          and password = #{password, jdbcType=VARCHAR}
+    </select>
+
+    <select id="idCheck" parameterType="String" resultType="int">
+        select count(id)
+        from member
+        where id = #{id, jdbcType=VARCHAR}
+    </select>
+
+    <insert id="join" parameterType="member">
+        insert into member (id, password, name, address, contact, email, birth)
+        values (#{id}, #{password}, #{name}, #{address}, #{contact}, #{email}, to_date(#{birth}, 'YYYY-MM-DD'))
+    </insert>
+
+    <select id="getMember" parameterType="String" resultType="member">
+        select *
+        from member
+        where id = #{id, jdbcType=VARCHAR}
+    </select>
+</mapper>

@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="en">
+
+<!-- Head -->
+<head th:replace="header :: header">
+</head>
+<body class="">
+
+<!-- Navbar -->
+<nav th:replace="navbar :: navbar">
+</nav>
+<!-- / Navbar-->
+
+<!-- Main Section-->
+<section
+        class="mt-0 overflow-hidden d-flex justify-content-center align-items-center p-4">
+    <!-- Page Content Goes Here -->
+
+    <!-- Login Form-->
+    <div class="col col-md-8 col-lg-6 col-xxl-5" style="height: 100%;">
+        <div class="shadow-xl p-4 p-lg-5 bg-white">
+            <h1 class="text-center mb-5 fs-2 fw-bold">회원 가입</h1>
+            <form th:action="@{join}" method="post" onsubmit="return inputCheck()">
+                <div class="form-group">
+                    <label class="form-label" for="join-id">아이디</label>
+                    <input type="text" th:field="${input.id}" class="form-control w-100" id="join-id" placeholder="아이디를 입력해 주세요.">
+                    <a class="text-muted small" onclick="validateID()" role="button" style="float: right;" >Check ID</a>
+                    <div id="id-message"></div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="join-password">비밀번호</label>
+                    <input type="password" th:field="${input.password}" class="form-control" onblur="validatePassword()" id="join-password" placeholder="비밀번호를 입력해 주세요.">
+                    <div id="password-message"></div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="join-password-confirm">비밀번호 확인</label>
+                    <input type="password" class="form-control" onblur="confirmPassword()" id="join-password-confirm" placeholder="비밀번호 확인을 입력해 주세요.">
+                    <div id="password-confirm-message"></div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="join-name">이름</label>
+                    <input type="text" th:field="${input.name}" class="form-control" id="join-name" placeholder="이름을 입력해 주세요.">
+                </div>
+
+                <label for="join-postcode" class="form-label">우편번호</label>
+                <div class="input-group" style="margin-bottom: 2rem;">
+                    <input type="text" class="form-control" id="join-postcode" readonly>
+                    <button type="button" class="btn btn-dark btn-sm px-4" onclick="searchAddress()">검색</button>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="join-address">주소</label>
+                    <input type="text" th:field="${input.address}" class="form-control" onblur="inductSearch()" id="join-address" placeholder="주소를 입력해 주세요.">
+                    <div id="address-message"></div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="join-address-detail">상세 주소</label>
+                    <input type="text" th:name="addressDetail" class="form-control" onblur="inductSearch()" id="join-address-detail" placeholder="상세주소를 입력해 주세요.">
+                    <div id="detail-message"></div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="join-contact">연락처</label>
+                    <input type="tel" th:field="${input.contact}" class="form-control" onblur="validateContact()" id="join-contact" placeholder="연락처를 입력해 주세요.">
+                    <div id="contact-message"></div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="join-email">이메일</label>
+                    <input type="email" th:field="${input.email}" class="form-control" onblur="validateEmail()" id="join-email" placeholder="이메일을 입력해 주세요.">
+                    <div id="email-message"></div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="join-birth">생년월일</label>
+                    <input type="date" th:field="${input.birth}" class="form-control" id="join-birth" placeholder="생년월일을 입력해 주세요.">
+                </div>
+                <div class="d-flex justify-content-center">
+                    <button type="submit" class="btn btn-dark d-block w-50 my-4">가입하기</button>
+                </div>
+            </form>
+            <p class="d-block text-center text-muted">이미 계정이 있으신가요? <a class="text-muted" href="loginPage">로그인하기</a></p>
+        </div>
+
+    </div>
+    <!-- / Login Form-->
+
+    <!-- /Page Content -->
+</section>
+<!-- / Main Section-->
+
+
+<!-- Theme JS -->
+<!-- Vendor JS -->
+<script src="/js/vendor.bundle.js"></script>
+
+<!-- Theme JS -->
+<script src="/js/theme.bundle.js"></script>
+
+<!-- Validation -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+<script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+<script src="/js/join.js"></script>
+
+</body>
+
+</html>

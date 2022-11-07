@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<!-- Head -->
+<head th:replace="header :: header">
+</head>
+<body class="">
+
+<!-- Navbar -->
+<nav th:replace="navbar :: navbar">
+</nav>
+<!-- / Navbar-->
+
+<!-- Main Section-->
+<section class="mt-0 overflow-lg-hidden  vh-lg-100 mb-3">
+  <!-- Page Content Goes Here -->
+  <div class="container">
+    <div class="row g-0 vh-lg-100">
+      <div class="col-12 col-lg-7 pt-5 pt-lg-10">
+        <div class="pe-lg-5">
+          <div class="mt-5">
+            <h3 class="fs-5 fw-bolder mb-0 border-bottom pb-4">장바구니</h3>
+            <div class="table-responsive">
+              <table class="table align-middle">
+                <tbody class="border-0">
+                <!-- Cart Item-->
+                <div th:each="cart : ${cartList}" class="row mx-0 py-4 g-0 border-bottom">
+                  <div class="col-2 position-relative">
+                    <picture class="d-block border">
+                      <th:block th:with="img=${#strings.arraySplit(cart.image, ',')[0]}">
+                      <img class="img-fluid" th:src="@{${'/upload/' + img}}" alt="HTML Bootstrap Template by Pixel Rocket">
+                      </th:block>
+                    </picture>
+                  </div>
+                  <div class="col-9 offset-1">
+                    <div>
+                      <h6 class="justify-content-between d-flex align-items-start mb-2" th:text="${cart.product_name}">
+                        <i class="ri-close-line ms-3"></i>
+                      </h6>
+                      <span class="d-block text-muted fw-bolder text-uppercase fs-9">사이즈: [[${cart.size}]] / 수량: [[${cart.quantity}]]</span>
+                    </div>
+                    <p class="fw-bolder text-end text-muted m-0" th:text="${#numbers.formatInteger(cart.price, 0, 'COMMA')} + '원'"/>
+                    <a th:href="@{removeCartProduct(cart_id=${cart.cart_id})}" class="fw-bolder text-end text-muted m-0 small">해당 상품 삭제</a>
+                  </div>
+                </div>                                        <!-- / Cart Item-->
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-12 col-lg-5 pt-lg-10 pb-5 pb-lg-0 my-5 my-lg-0 mt-lg-5">
+        <div class="p-4 py-lg-0 pe-lg-0 ps-lg-5">
+          <div class="pb-4 border-bottom">
+            <div class="d-flex flex-column flex-md-row justify-content-md-between mb-4 mb-md-2">
+              <div>
+                <p class="m-0 fw-bold fs-5">상품 합계</p>
+                <span class="text-muted small">무료 배송</span>
+              </div>
+              <p class="m-0 fs-5 fw-bold" th:text="${#numbers.formatInteger(total, 0, 'COMMA')} + '원'"/>
+            </div>
+          </div>
+          <a href="orderPage" class="btn btn-dark w-100 text-center" role="button">
+            <th:block th:if="${flag} == null">주문하기</th:block>
+            <th:block th:if="${flag}">카트에 상품이 없습니다.</th:block>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- /Page Content -->
+</section>
+<!-- / Main Section-->
+
+<!-- Theme JS -->
+<!-- Vendor JS -->
+<script src="/js/vendor.bundle.js"></script>
+
+<!-- Theme JS -->
+<script src="/js/theme.bundle.js"></script>
+</body>
+
+</html>

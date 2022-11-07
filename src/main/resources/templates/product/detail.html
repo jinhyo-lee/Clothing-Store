@@ -1,0 +1,198 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<!-- Head -->
+<head th:replace="header :: header">
+</head>
+<body class="">
+
+<!-- Navbar -->
+<nav th:replace="navbar :: navbar">
+</nav>
+<!-- / Navbar-->
+
+<!-- Main Section-->
+<section class="mt-0 ">
+  <!-- Page Content Goes Here -->
+
+  <!-- Breadcrumbs-->
+  <div class="bg-dark py-6">
+    <div class="container-fluid">
+      <nav class="m-0" aria-label="breadcrumb">
+        <ol class="breadcrumb m-0">
+          <li class="breadcrumb-item breadcrumb-light"><a th:href="mainPage">Home</a></li>
+          <li th:if="${parent} != null" class="breadcrumb-item breadcrumb-light"><a th:href="@{productList(page=${1}, category_id=${category.parent_id})}" th:text="${parent}"/></li>
+          <li class="breadcrumb-item breadcrumb-light"><a th:href="@{productList(page=${1}, category_id=${category.category_id})}" th:text="${category.category_name}"/></li>
+        </ol>
+      </nav>            </div>
+  </div>
+  <!-- / Breadcrumbs-->
+
+  <div class="container-fluid mt-5">
+
+    <!-- Product Top Section-->
+    <div class="row g-9" data-sticky-container>
+
+      <!-- Product Images-->
+      <div class="col-12 col-md-6 col-xl-7">
+        <div class="row g-3" data-aos="fade-right">
+          <div class="col-12">
+            <picture th:each="image : ${#strings.arraySplit(product.image, ',')}">
+              <img class="img-fluid mb-3" data-zoomable th:src="@{${'/upload/' + image}}" alt="HTML Bootstrap Template by Pixel Rocket">
+            </picture>
+          </div>
+        </div>
+      </div>
+      <!-- /Product Images-->
+
+      <!-- Product Information-->
+      <div class="col-12 col-md-6 col-lg-5">
+        <div class="sticky-top top-5">
+          <div class="pb-3" data-aos="fade-in">
+
+            <h1 class="mb-1 fs-2 fw-bold" th:text="${product.product_name}"/>
+            <div class="d-flex justify-content-between align-items-center">
+              <p class="fs-4 m-0" th:text="${#numbers.formatInteger(product.price, 0, 'COMMA')} + '원'"/>
+            </div>
+            <form th:action="@{addCart}" method="post" onsubmit="">
+              <input type="hidden" th:name="product_id" th:value="${product.product_id}">
+              <input type="hidden" th:name="price" th:value="${product.price}">
+              <div class="mt-4 mb-3 product-option">
+                <div class="mt-4 d-flex justify-content-start flex-wrap align-items-start">
+                  <div th:if="${stock.one}" class="form-check-option form-check-rounded">
+                    <input type="radio" th:name="size" value="37" id="option-sizes-0" required>
+                    <label for="option-sizes-0">
+                      <small>37</small>
+                    </label>
+                  </div>
+                  <div th:if="${stock.two}" class="form-check-option form-check-rounded">
+                    <input type="radio" th:name="size" value="38" id="option-sizes-1" required>
+                    <label for="option-sizes-1">
+                      <small>38</small>
+                    </label>
+                  </div>
+                  <div th:if="${stock.three}" class="form-check-option form-check-rounded">
+                    <input type="radio" th:name="size" value="39" id="option-sizes-2" required>
+                    <label for="option-sizes-2">
+                      <small>39</small>
+                    </label>
+                  </div>
+                  <div th:if="${stock.four}" class="form-check-option form-check-rounded">
+                    <input type="radio" th:name="size" value="40" id="option-sizes-3" required>
+                    <label for="option-sizes-3">
+                      <small>40</small>
+                    </label>
+                  </div>
+                  <div th:if="${stock.five}" class="form-check-option form-check-rounded">
+                    <input type="radio" th:name="size" value="41" id="option-sizes-4" required>
+                    <label for="option-sizes-4">
+                      <small>41</small>
+                    </label>
+                  </div>
+                  <div th:if="${stock.six}" class="form-check-option form-check-rounded">
+                    <input type="radio" th:name="size" value="42" id="option-sizes-5" required>
+                    <label for="option-sizes-5">
+                      <small>42</small>
+                    </label>
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-md-2">
+                <label for="quantity"><h6>수량</h6></label>
+                <select th:name="quantity" class="form-select rounded form-select-sm border-sm p-2 pe-5 lh-1 fs-7" id="quantity" style="margin-top: 5px;">
+                  <option value="1" selected>1</option>
+                  <option value="2">2</option>
+                  <option value="3">3</option>
+                  <option value="4">4</option>
+                  <option value="5">5</option>
+                </select>
+              </div>
+              <a sec:authorize="!isAuthenticated()" class="btn btn-dark w-100 mt-4 mb-0 hover-lift-sm hover-boxshadow" role="button" th:href="loginPage">
+                장바구니에 담기
+              </a>
+              <button sec:authorize="isAuthenticated()" type="submit" class="btn btn-dark w-100 mt-4 mb-0 hover-lift-sm hover-boxshadow">
+                <th:block th:if="${flag} == null">장바구니에 담기</th:block>
+                <th:block th:if="${flag}">담기 완료</th:block>
+              </button>
+
+            </form>
+            <!-- Product Accordion -->
+            <div class="accordion" id="accordionProduct" style="margin-top: 10px;">
+              <div class="accordion-item">
+                <h2 class="accordion-header" id="headingOne">
+                  <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                    상품 상세
+                  </button>
+                </h2>
+                <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#accordionProduct">
+                  <div class="accordion-body">
+                    <p class="m-0" th:text="${product.detail}"/>
+                  </div>
+                </div>
+              </div>
+              <div class="accordion-item">
+                <h2 class="accordion-header" id="headingTwo">
+                  <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                    소재
+                  </button>
+                </h2>
+                <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#accordionProduct">
+                  <div class="accordion-body">
+                    <ul class="list-group list-group-flush">
+                      <li class="list-group-item d-flex border-0 row g-0 px-0">
+                        <span class="col-4 fw-bolder">소재</span>
+                        <span class="col-7 offset-1" th:text="${product.material}"/>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+              <div class="accordion-item">
+                <h2 class="accordion-header" id="headingThree">
+                  <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+                    배송 및 환불
+                  </button>
+                </h2>
+                <div id="collapseThree" class="accordion-collapse collapse" aria-labelledby="headingThree" data-bs-parent="#accordionProduct">
+                  <div class="accordion-body">
+                    <ul class="list-group list-group-flush">
+                      <li class="list-group-item d-flex border-0 row g-0 px-0">
+                        <span class="col-4 fw-bolder">배송</span>
+                        <span class="col-7 offset-1">무료 배송 / 해외 배송 별도 신청</span>
+                      </li>
+                      <li class="list-group-item d-flex border-0 row g-0 px-0">
+                        <span class="col-4 fw-bolder">환불</span>
+                        <span class="col-7 offset-1">배송 완료 시점에서 7일 이내 가능</span>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- / Product Accordion-->
+          </div>                    </div>
+      </div>
+      <!-- / Product Information-->
+    </div>
+    <!-- / Product Top Section-->
+
+  </div>
+
+  <!-- /Page Content -->
+</section>
+<!-- / Main Section-->
+
+<!-- Footer -->
+<footer class="border-top py-5 mt-4  " th:replace="footer :: footer">
+</footer>    <!-- / Footer-->
+
+<!-- Theme JS -->
+<!-- Vendor JS -->
+<script src="/js/vendor.bundle.js"></script>
+
+<!-- Theme JS -->
+<script src="/js/theme.bundle.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,270 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<!-- Head -->
+<head th:replace="header :: header">
+</head>
+<body class="">
+
+<script>
+    function applyAllMileage() {
+        let mileage = $("#total-mileage").val();
+        $("#amount-mileage").val(mileage);
+    };
+
+    function discountMileage() {
+        let mileage = parseInt($("#total-mileage").val());
+        let amount = parseInt($("#amount-mileage").val());
+        if (mileage < amount) {
+            alert("적립금이 부족합니다.")
+            $("#amount-mileage").val(0);
+            return;
+        }
+
+        let total = $("#total-cost").val();
+        $("#result-cost").val(total - amount);
+        let result = String($("#result-cost").val()).replace(/(\d)(?=(?:\d{3})+(?!\d))/g, '$1,');
+        $("#result-cost-text").text(result + '원');
+
+        let discount = String(amount).replace(/(\d)(?=(?:\d{3})+(?!\d))/g, '$1,');
+        $("#discount-amount").text(discount + '원');
+    };
+</script>
+
+<!-- Navbar -->
+<nav th:replace="navbar :: navbar">
+</nav>
+<!-- / Navbar-->
+
+<!-- Main Section-->
+<section class="mt-0  vh-lg-100">
+    <!-- Page Content Goes Here -->
+    <div class="container">
+        <form th:action="@{order}" method="post">
+        <div class="row g-0 vh-lg-100">
+            <div class="col-lg-7 pt-5 pt-lg-10">
+                <div class="pe-lg-5 mb-7">
+                  <div class="mt-5">
+                    <!-- Checkout Panel Information-->
+                    <h3 class="fs-5 mt-5 fw-bolder mb-4 border-bottom pb-4">주문자</h3>
+                    <div class="row">
+                        <div class="col-12">
+                            <label class="form-label d-block" th:text="${member.name}"/>
+                            <label class="form-label d-block" style="margin-bottom: 0;" th:text="${member.contact}"/>
+                            <label class="form-label d-block" style="margin-bottom: 0;" th:text="${member.email}"/>
+                        </div>
+                    </div>
+
+                    <h3 class="fs-5 mt-5 fw-bolder mb-4 border-bottom pb-4">배송지</h3>
+                    <div class="row">
+                        <div class="form-group">
+                            <label class="form-label" for="order-name">이름</label>
+                            <input type="text" th:name="name" class="form-control" id="order-name" placeholder="이름을 입력해 주세요." th:value="${member.name}" required>
+                        </div>
+
+                        <label for="join-postcode" class="form-label">우편번호</label>
+                        <div class="input-group" style="margin-bottom: 2rem;">
+                            <input type="text" class="form-control" id="join-postcode" readonly>
+                            <button type="button" class="btn btn-dark btn-sm px-4" onclick="searchAddress()">검색</button>
+                        </div>
+                        <th:block th:with="address=${#strings.arraySplit(member.address, ',')}">
+                        <div class="form-group">
+                            <label class="form-label" for="join-address">주소</label>
+                            <input type="text" th:name="address" class="form-control" id="join-address" placeholder="주소를 입력해 주세요." th:value="${address[0]}" required>
+                            <div id="address-message"></div>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="order-address-detail">상세 주소</label>
+                            <input type="text" th:name="addressDetail" class="form-control" id="order-address-detail" placeholder="상세주소를 입력해 주세요." th:value="${address[1]}" required>
+                            <div id="detail-message"></div>
+                        </div>
+                        </th:block>
+                        <div class="form-group">
+                            <label class="form-label" for="join-contact">연락처</label>
+                            <input type="tel" th:name="contact" class="form-control" onblur="validateContact()" id="join-contact" placeholder="연락처를 입력해 주세요." th:value="${member.contact}" required>
+                            <div id="contact-message"></div>
+                        </div>
+                    </div>
+
+                    <!-- Checkout Panel Information-->
+                    <h3 class="fs-5 fw-bolder mb-4 border-bottom pb-4">배송 수단</h3>
+
+                    <!-- Shipping Option-->
+                    <div class="form-check form-group form-check-custom form-radio-custom">
+                        <input class="form-check-input" type="radio" th:name="shipping" id="checkoutShippingMethodOne" checked value="CJ 대한 통운">
+                        <label class="form-check-label" for="checkoutShippingMethodOne">
+                              <span class="d-flex justify-content-between align-items-start">
+                                <span>
+                                  <span class="mb-0 fw-bolder d-block">CJ 대한 통운</span>
+                                </span>
+                              </span>
+                        </label>
+                    </div>
+
+                    <!-- Shipping Option-->
+                    <div class="form-check form-group form-check-custom form-radio-custom">
+                        <input class="form-check-input" type="radio" th:name="shipping" id="checkoutShippingMethodTwo" value="롯데 택배">
+                        <label class="form-check-label" for="checkoutShippingMethodTwo">
+                              <span class="d-flex justify-content-between align-items-start">
+                                <span>
+                                  <span class="mb-0 fw-bolder d-block">롯데 택배</span>
+                                </span>
+                              </span>
+                        </label>
+                    </div>
+
+                    <!-- Checkout Panel Information-->
+                    <h3 class="fs-5 fw-bolder mb-4 border-bottom pb-4">결제 방법</h3>
+                    <!-- Payment Option-->
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-check form-group form-check-custom form-radio-custom form-radio-highlight mb-3">
+                                <input class="form-check-input" type="radio" th:name="paymentMethod" id="checkoutPaymentStripe" th:value="credit" checked>
+                                <label class="form-check-label" for="checkoutPaymentStripe">
+                                <span class="d-flex justify-content-between align-items-start">
+                                  <span>
+                                    <span class="mb-0 fw-bolder d-block">신용 / 체크카드</span>
+                                  </span>
+                                  <i class="ri-bank-card-line"></i>
+                                </span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <!-- Payment Option-->
+                        <div class="col-md-6">
+                            <div class="form-check form-group form-check-custom form-radio-custom form-radio-highlight mb-3">
+                                <input class="form-check-input" type="radio" th:name="paymentMethod" id="checkoutPaymentPaypal" th:value="account">
+                                <label class="form-check-label" for="checkoutPaymentPaypal">
+                                <span class="d-flex justify-content-between align-items-start">
+                                  <span>
+                                    <span class="mb-0 fw-bolder d-block">가상 계좌</span>
+                                  </span>
+                                  <i class="ri-paypal-line"></i>
+                                </span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Payment Details-->
+                    <div class="card-details">
+                    </div>
+                    <!-- / Payment Details-->
+
+                    <!-- Paypal Info-->
+                    <div class="paypal-details d-none my-3 fw-bolder row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="bank-name" class="form-label">은행명</label>
+                                <select th:name="bankName" class="form-select" id="bank-name">
+                                    <option value="KB 국민은행">KB 국민은행</option>
+                                    <option value="신한은행">신한은행</option>
+                                    <option value="NH 농협은행">NH 농협은행</option>
+                                    <option value="우리은행">우리은행</option>
+                                    <option value="IBK 기업은행">IBK 기업은행</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="account-name" class="form-label">예금주</label>
+                                <input type="text" th:name="accountName" class="form-control" id="account-name">
+                            </div>
+                        </div>
+
+                        <div class="col-12">
+                            <div class="form-group">
+                                <label for="account-number" class="form-label">계좌번호</label>
+                                <input type="text" th:name="accountNumber" class="form-control" id="account-number">
+                            </div>
+                        </div>
+                    </div>
+                    <!-- /Paypal Info-->
+
+                  </div>
+                </div>
+            </div>
+            <div class="col-12 col-lg-5 pt-lg-10 pb-5 pb-lg-0 my-5 my-lg-0">
+                <div class="p-4 py-lg-0 pe-lg-0 ps-lg-5">
+                    <div class="pb-3">
+                        <h3 class="fs-5 mt-5 fw-bolder mb-4 border-bottom pb-4">주문 상품</h3>
+                        <!-- Cart Item-->
+                        <div th:each="cart : ${cartList}" class="row mx-0 py-4 g-0 border-bottom">
+                            <div class="col-2 position-relative">
+                                <picture class="d-block border">
+                                    <th:block th:with="img=${#strings.arraySplit(cart.image, ',')[0]}">
+                                    <img class="img-fluid" th:src="@{${'/upload/' + img}}" alt="HTML Bootstrap Template by Pixel Rocket">
+                                    </th:block>
+                                </picture>
+                            </div>
+                            <div class="col-9 offset-1">
+                                <div>
+                                    <h6 class="justify-content-between d-flex align-items-start mb-2" th:text="${cart.product_name}">
+                                        <i class="ri-close-line ms-3"></i>
+                                    </h6>
+                                    <span class="d-block text-muted fw-bolder text-uppercase fs-9">Size: [[${cart.size}]] / Qty: [[${cart.quantity}]]</span>
+                                </div>
+                                <p class="fw-bolder text-end text-muted m-0" th:text="${#numbers.formatInteger(cart.price, 0, 'COMMA')} + '원'"/>
+                            </div>
+                        </div>    <!-- / Cart Item-->
+                    </div>
+                    <div class="py-4 border-bottom pt-sm-1">
+                        <div class="py-4">
+                            <input type="hidden" th:value="${member.mileage}" id="total-mileage">
+                            <input type="hidden" th:value="${total}" id="total-cost">
+                            <label class="form-label" for="amount-mileage" th:text="'적립금 (보유 적립금 ' + ${#numbers.formatInteger(member.mileage, 0, 'COMMA')} + '원)'"/>
+                            <div class="input-group mb-0">
+                                <input type="text" th:name="discount" onblur="discountMileage()" class="form-control" id="amount-mileage" th:value="0">
+                                <button type="button" class="btn btn-dark btn-sm px-4" onclick="applyAllMileage()">전액 사용</button>
+                            </div>
+                        </div>
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <p class="m-0 fw-bolder fs-6">상품 합계</p>
+                            <p class="m-0 fs-6 fw-bolder" th:text="${#numbers.formatInteger(total, 0, 'COMMA')} + '원'"/>
+                        </div>
+                        <div class="d-flex justify-content-between align-items-center ">
+                            <p class="m-0 fw-bolder fs-6">총 할인 금액</p>
+                            <p class="m-0 fs-6 fw-bolder" id="discount-amount" th:text="0원"/>
+                        </div>
+                    </div>
+                    <div class="py-4">
+                        <div class="d-flex justify-content-between">
+                            <div>
+                                <p class="m-0 fw-bold fs-5">결제 금액</p>
+                                <span class="text-muted small">무료 배송</span>
+                            </div>
+                            <p class="m-0 fs-6 fw-bolder" id="result-cost-text" th:text="${#numbers.formatInteger(total, 0, 'COMMA')} + '원'"/>
+                            <input type="hidden" class="border-0" th:name="cost" id="result-cost" th:value="${total}">
+                        </div>
+                    </div>
+
+                    <div class="pb-5 d-flex justify-content-md-end align-items-center">
+                        <button type="submit" class="btn btn-dark w-100 w-md-auto">결제하기</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        </form>
+    </div>
+    <!-- /Page Content -->
+</section>
+<!-- / Main Section-->
+
+
+<!-- Theme JS -->
+<!-- Vendor JS -->
+<script src="/js/vendor.bundle.js"></script>
+
+<!-- Theme JS -->
+<script src="/js/theme.bundle.js"></script>
+
+<!-- Validation -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+<script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+<script src="/js/join.js"></script>
+
+</body>
+
+</html>

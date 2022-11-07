@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.prj.mapper.ProductMapper">
+    <select id="getCategoryId" parameterType="category" resultType="int">
+        select category_id
+        from category
+        where category_name = #{category_name}
+          and parent_id = #{parent_id, jdbcType= INTEGER}
+    </select>
+
+    <insert id="upload" parameterType="product">
+        <selectKey keyProperty="product_id" resultType="int" order="BEFORE">
+            select product_seq.nextval from dual
+        </selectKey>
+        insert into product (product_id, category_id, product_name, detail, material, price, image)
+        values (#{product_id}, #{category_id}, #{product_name}, #{detail}, #{material}, #{price}, #{image})
+    </insert>
+
+    <insert id="setStock" parameterType="stock">
+        insert into stock
+        values (#{product_id}, #{one}, #{two}, #{three}, #{four}, #{five}, #{six}, #{total})
+    </insert>
+
+    <select id="getProductList" parameterType="HashMap" resultType="product">
+        select *
+        from (select a.*, rownum rn from (
+        <choose>
+            <when test="category_id lte 4">
+                select *
+                from product
+                where category_id in (select category_id from category where parent_id = #{category_id})
+            </when>
+
+            <otherwise>
+                select * from product where category_id = #{category_id}
+            </otherwise>
+        </choose>
+        ) a)
+        <![CDATA[
+        where rn >= ((#{page} - 1) * 6 + 1)
+          and rn <= (#{page} * 6)
+        ]]>
+    </select>
+
+    <select id="getProductCount" parameterType="int" resultType="int">
+        <choose>
+            <when test="category_id lte 4">
+                select count(product_id)
+                from product
+                where category_id in (select category_id from category where parent_id = #{category_id})
+            </when>
+
+            <otherwise>
+                select count(product_id) from product where category_id = #{category_id}
+            </otherwise>
+        </choose>
+    </select>
+
+    <select id="getCategory" parameterType="int" resultType="category">
+        select *
+        from category
+        where category_id = #{category_id}
+    </select>
+
+    <select id="getProduct" parameterType="int" resultType="product">
+        select *
+        from product
+        where product_id = #{product_id}
+    </select>
+
+    <select id="getStock" parameterType="int" resultType="stock">
+        select *
+        from stock
+        where product_id = #{product_id}
+    </select>
+
+    <select id="getCategoryByProduct" parameterType="int" resultType="category">
+        select *
+        from category
+        where category_id = (select category_id from product where product_id = #{product_id})
+    </select>
+
+    <select id="getSearchList" parameterType="HashMap" resultType="product">
+        select *
+        from (select a.*, rownum rn
+              from (select *
+                    from product
+                    where lower(product_name) like lower('%' || #{product_name, jdbcType=VARCHAR} || '%')) a)
+        <![CDATA[
+        where rn >= ((#{page} - 1) * 6 + 1)
+          and rn <= (#{page} * 6)
+        ]]>
+    </select>
+
+    <select id="getSearchCount" parameterType="String" resultType="int">
+        select count(product_id)
+        from product
+        where lower(product_name) like lower('%' || #{product_name, jdbcType=VARCHAR} || '%')
+    </select>
+</mapper>

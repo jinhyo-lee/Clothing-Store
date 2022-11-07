@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.prj.mapper.OrderMapper">
+    <select id="getCart" parameterType="String" resultType="cart">
+        select cart_id,
+               ct.product_id,
+               id,
+               product_name,
+               "SIZE",
+               quantity,
+               ct.price,
+               image
+        from cart ct
+                 left join product pd on ct.product_id = pd.product_id
+        where id = #{id}
+    </select>
+
+    <select id="getTotal" parameterType="String" resultType="int">
+        select sum(price)
+        from cart
+        where id = #{id}
+    </select>
+
+    <insert id="addCart" parameterType="cart">
+        insert into cart
+        values (cart_seq.nextval, #{product_id}, #{id}, #{size}, #{quantity}, #{price})
+    </insert>
+
+    <insert id="addOrder" parameterType="order">
+        <selectKey keyProperty="order_id" resultType="int" order="BEFORE">
+            select order_seq.nextval from dual
+        </selectKey>
+        insert into "ORDER" (order_id, id, cost, discount, payment, address, shipping)
+        values (#{order_id}, #{id}, #{cost}, #{discount}, #{payment}, #{address}, #{shipping})
+    </insert>
+
+    <insert id="addDetail" parameterType="java.util.List">
+        insert into detail (detail_id, order_id, product_id, "SIZE", quantity, price)
+        select detail_seq.nextval, alias.* from (
+        <foreach collection="list" item="item" separator="union all">
+            select #{item.order_id} order_id, #{item.product_id} product_id, #{item.size} "SIZE", #{item.quantity}
+            quantity, #{item.price} price from dual
+        </foreach>
+        ) alias
+    </insert>
+
+    <delete id="removeCart" parameterType="java.util.List">
+        delete from cart where cart_id in
+        <foreach collection="list" item="item" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </delete>
+
+    <update id="updateStock" parameterType="java.util.List">
+        <foreach collection="list" item="item" separator=";" open="declare begin" close="; end;">
+            update stock set
+            <choose>
+                <when test="item.size.equals('37')">
+                    one = one - #{item.quantity}
+                </when>
+                <when test="item.size.equals('38')">
+                    two = two - #{item.quantity}
+                </when>
+                <when test="item.size.equals('39')">
+                    three = three - #{item.quantity}
+                </when>
+                <when test="item.size.equals('40')">
+                    four = four - #{item.quantity}
+                </when>
+                <when test="item.size.equals('41')">
+                    five = five - #{item.quantity}
+                </when>
+                <otherwise>
+                    six = six - #{item.quantity}
+                </otherwise>
+            </choose>
+            , total = total- #{item.quantity}
+            where product_id = #{item.product_id}
+        </foreach>
+    </update>
+
+    <update id="updateMileage" parameterType="order">
+        update member
+        set mileage = mileage - #{discount} + (#{cost} * 0.03)
+        where id = #{id}
+    </update>
+
+    <insert id="loggingMileage" parameterType="mileage">
+        insert into mileage (mileage_id, id, type, amount)
+        values (mileage_seq.nextval, #{id}, #{type}, #{amount})
+    </insert>
+
+    <delete id="removeCartProduct" parameterType="int">
+        delete
+        from cart
+        where cart_id = #{cart_id}
+    </delete>
+</mapper>

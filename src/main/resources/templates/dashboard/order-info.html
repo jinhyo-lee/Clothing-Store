@@ -1,0 +1,192 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<!-- Head -->
+<head th:replace="header :: header">
+</head>
+<body class="">
+
+<style>
+    th, td{
+        height: 100px;
+        vertical-align: middle;
+    }
+    table th{
+        border-color: #e6e6e6;
+    }
+</style>
+
+<!-- Navbar -->
+<nav th:replace="navbar :: navbar">
+</nav>
+<!-- / Navbar-->
+
+<!-- Main Section-->
+<section class="mt-0  vh-lg-100">
+    <!-- Page Content Goes Here -->
+    <div class="container">
+        <div class="row g-0 vh-lg-100 d-flex justify-content-center">
+
+            <div class="col-lg-10 pt-5">
+                <table class="table align-middle">
+                    <tbody class="border-0">
+                    <!-- Cart Item-->
+                    <div th:each="detail : ${detailList}" class="row mx-0 py-4 g-0 border-bottom">
+                        <div class="col-2 position-relative">
+                            <picture class="d-block border">
+                                <th:block th:with="img=${#strings.arraySplit(detail.image, ',')[0]}">
+                                    <img class="img-fluid" th:src="@{${'/upload/' + img}}" alt="HTML Bootstrap Template by Pixel Rocket">
+                                </th:block>
+                            </picture>
+                        </div>
+                        <div class="col-9 offset-1">
+                            <div>
+                                <h6 class="justify-content-between d-flex align-items-start mb-2" th:text="${detail.product_name}">
+                                    <i class="ri-close-line ms-3"></i>
+                                </h6>
+                                <span class="d-block text-muted fw-bolder text-uppercase fs-9">사이즈: [[${detail.size}]] / 수량: [[${detail.quantity}]]</span>
+                            </div>
+                            <p class="fw-bolder text-end text-muted m-0" th:text="${#numbers.formatInteger(detail.price, 0, 'COMMA')} + '원'"/>
+                        </div>
+                    </div>                                        <!-- / Cart Item-->
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="col-lg-5 pt-3 pt-lg-5" style="margin-left: 3rem;">
+                <div class="pe-lg-5">
+                    <div class="mt-3 border-bottom mb-10">
+                        <!-- Checkout Panel Information-->
+                        <div class="d-flex justify-content-between align-items-center mb-0 border-bottom pb-4">
+                            <h3 class="fs-5 fw-bolder m-0 lh-1">주문 정보</h3>
+                        </div>
+                        <div class="row" style="margin:0px 0px 40px 0px;">
+                            <table class="table">
+                                <tbody>
+                                <tr>
+                                    <th scope="row">주문 번호</th>
+                                    <td th:text="${order.order_id}"/>
+                                </tr>
+                                <tr>
+                                    <th scope="row">주문 일자</th>
+                                    <td th:text="${order.order_date}"/>
+                                </tr>
+                                <tr>
+                                    <th scope="row">주문 상태</th>
+                                    <td th:text="${order.status}"/>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <!-- Checkout Panel Information-->
+                        <div class="d-flex justify-content-between align-items-center mb-4 border-bottom pb-4">
+                            <h3 class="fs-5 fw-bolder m-0 lh-1">배송지 정보</h3>
+                        </div>
+                        <div class="row">
+                            <th:block th:with="addr=${#strings.arraySplit(address, ',')}">
+                            <!-- Name-->
+                            <div class="col-12">
+                                <div class="form-group">
+                                    <label for="name" class="form-label">이름</label>
+                                    <input type="email" class="form-control" id="name" th:value="${addr[0]}" readonly>
+                                </div>
+                            </div>
+
+                            <!-- Address-->
+                            <div class="col-12">
+                                <div class="form-group">
+                                    <label for="update-address" class="form-label">주소</label>
+                                    <input type="text" class="form-control" id="update-address" th:value="${addr[1]}" readonly>
+                                </div>
+                            </div>
+                            <!-- Address Detail-->
+                            <div class="col-12">
+                                <div class="form-group">
+                                    <label for="update-address-detail" class="form-label">상세 주소</label>
+                                    <input type="text" class="form-control" id="update-address-detail" th:value="${addr[2]}" readonly>
+                                </div>
+                            </div>
+
+                            <!-- Contact-->
+                            <div class="col-12">
+                                <div class="form-group">
+                                    <label for="contact" class="form-label">연락처</label>
+                                    <input type="text" class="form-control" id="contact" th:value="${addr[3]}" readonly>
+                                </div>
+                            </div>
+                            </th:block>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-5 pt-3 pt-lg-5" style="margin-left: 3rem;">
+                <div class="pe-lg-5">
+                    <div class="mt-3">
+                        <!-- Checkout Panel Information-->
+                        <div class="d-flex justify-content-between align-items-center mb-0 border-bottom pb-4">
+                            <h3 class="fs-5 fw-bolder m-0 lh-1">결제 정보</h3>
+                        </div>
+                        <div class="row" style="margin:0px;">
+                            <table class="table">
+                                <tbody>
+                                <tr>
+                                    <th scope="row">결제 금액</th>
+                                    <td th:text="${#numbers.formatInteger(order.cost, 0, 'COMMA')} + '원'"/>
+                                </tr>
+                                <tr>
+                                    <th scope="row">주문자</th>
+                                    <td th:text="${member.name}"/>
+                                </tr>
+
+                                <th:block th:if="${order.payment.toString().equals('신용 / 체크카드')}">
+                                    <tr>
+                                        <th scope="row">결제 수단</th>
+                                        <td th:text="${order.payment}"/>
+                                    </tr>
+                                </th:block>
+                                <th:block th:unless="${order.payment.toString().equals('신용 / 체크카드')}" th:with="account=${#strings.arraySplit(order.payment, ',')}">
+                                    <tr>
+                                        <th scope="row">결제 수단</th>
+                                        <td th:text="${'가상계좌'}"/>
+                                    </tr>
+                                    <tr>
+                                        <th scope="row">은행명</th>
+                                        <td th:text="${account[0]}"/>
+                                    </tr>
+                                    <tr>
+                                        <th scope="row">예금주</th>
+                                        <td th:text="${account[1]}"/>
+                                    </tr>
+                                    <tr>
+                                        <th scope="row">계좌번호</th>
+                                        <td th:text="${account[2]}"/>
+                                    </tr>
+                                </th:block>
+                                <tr>
+                                    <th scope="row">할인 금액</th>
+                                    <td th:text="${#numbers.formatInteger(order.discount, 0, 'COMMA')} + '원'"/>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <!-- /Page Content -->
+</section>
+<!-- / Main Section-->
+
+<!-- Theme JS -->
+<!-- Vendor JS -->
+<script src="/js/vendor.bundle.js"></script>
+
+<!-- Theme JS -->
+<script src="/js/theme.bundle.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<!-- Head -->
+<head th:replace="header :: header">
+</head>
+<body class="">
+
+<!-- Navbar -->
+<nav th:replace="navbar :: navbar">
+</nav>
+<!-- / Navbar-->
+
+<!-- Main Section-->
+<section class="mt-0 ">
+    <!-- Page Content Goes Here -->
+
+    <div class="container-fluid" data-aos="fade-in">
+        <!-- Category Toolbar-->
+        <div class="d-flex justify-content-between items-center pt-5 pb-4 flex-column flex-lg-row">
+            <div>
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a th:href="mainPage">Home</a></li>
+                        <li th:if="${parent} != null" class="breadcrumb-item"><a th:href="@{productList(page=${1}, category_id=${category.parent_id})}" th:text="${parent}"/></li>
+                        <li class="breadcrumb-item"><a th:href="@{productList(page=${1}, category_id=${category.category_id})}" th:text="${category.category_name}"/></li>
+                    </ol>
+                </nav>
+                <h1 class="fw-bold fs-3 mb-2" style="text-transform: capitalize;">[[${category.category_name}]]</h1>
+            </div>
+        </div>            <!-- /Category Toolbar-->
+
+        <!-- Products-->
+        <div class="row g-4">
+            <div class="col-12 col-sm-6 col-lg-4" th:each="product : ${productList}">
+                <!-- Card Product-->
+                <div class="card border border-transparent position-relative overflow-hidden h-100 transparent">
+                    <div class="card-img position-relative">
+                        <span class="position-absolute top-0 end-0 p-2 z-index-20 text-muted"><i class="ri-heart-line"></i></span>
+                        <picture class="position-relative overflow-hidden d-block bg-light">
+                            <th:block th:with="img=${#strings.arraySplit(product.image, ',')[0]}">
+                            <img class="w-100 img-fluid position-relative z-index-10" title="" th:src="@{${'/upload/' + img}}" alt="">
+                            </th:block>
+                        </picture>
+                        <div class="position-absolute start-0 bottom-0 end-0 z-index-20 p-2">
+                            <button class="btn btn-quick-add"><i class="ri-add-line me-2"></i> Quick Add</button>
+                        </div>
+                    </div>
+                    <div class="card-body px-0">
+                        <a class="text-decoration-none link-cover" th:href="@{productDetail(product_id=${product.product_id})}" th:text="${product.product_name}"></a>
+                        <p class="mt-2 mb-0 small"th:text="${#numbers.formatInteger(product.price, 0, 'COMMA')} + '원'"/>
+                    </div>
+                </div>
+                <!--/ Card Product-->
+            </div>
+        </div>
+        <!-- / Products-->
+
+        <!-- Pagination-->
+        <div th:if="${listCount} > 0" class="card-body">
+            <ul class="pagination">
+                <li th:if="${startPage} > 3" class="page-item"><a class="page-link" th:href="@{productList(page=${startPage - 3}, category_id=${category.category_id})}">이전 페이지</a></li>
+                <th:block th:each="i : ${#numbers.sequence(startPage, endPage)}">
+                    <li th:if="${i} == page" class="page-item active"><a class="page-link" th:text="${i}"/></li>
+                    <li th:if="${i} != page" class="page-item"><a class="page-link" th:href="@{productList(page=${i}, category_id=${category.category_id})}" th:text="${i}"/></li>
+                </th:block>
+                <li th:if="${endPage} < ${pageCount}" class="page-item"><a class="page-link" th:href="@{productList(page=${startPage + 3}, category_id=${category.category_id})}">다음 페이지</a></li>
+            </ul>
+        </div>            <!-- / Pagination-->
+    </div>
+
+    <!-- /Page Content -->
+</section>
+<!-- / Main Section-->
+
+<!-- Footer -->
+<footer class="border-top py-5 mt-4  " th:replace="footer :: footer">
+</footer>    <!-- / Footer-->
+
+<!-- Theme JS -->
+<!-- Vendor JS -->
+<script src="/js/vendor.bundle.js"></script>
+
+<!-- Theme JS -->
+<script src="/js/theme.bundle.js"></script>
+</body>
+
+</html>

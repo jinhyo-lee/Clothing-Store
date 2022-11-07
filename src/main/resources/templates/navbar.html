@@ -1,0 +1,154 @@
+<nav class="navbar navbar-expand-lg navbar-light bg-white flex-column border-0  " th:fragment="navbar" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+    <div class="container-fluid">
+        <div class="w-100">
+            <div class="d-flex justify-content-between align-items-center flex-wrap">
+
+                <!-- Logo-->
+                <a class="navbar-brand fw-bold fs-3 m-0 p-0 flex-shrink-0 order-0" href="mainPage">
+                    <div class="d-flex align-items-center">
+                        <img class="img-fluid navbar-brand" src="/default/logo.png" style="height: 90px;">
+                    </div>
+                </a>
+                <!-- / Logo-->
+
+                <!-- Navbar Icons-->
+                <ul class="list-unstyled mb-0 d-flex align-items-center order-1 order-lg-2 nav-sidelinks">
+
+                    <!-- Mobile Nav Toggler-->
+                    <li class="d-lg-none">
+                            <span class="nav-link text-body d-flex align-items-center cursor-pointer" data-bs-toggle="collapse"
+                                  data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false"
+                                  aria-label="Toggle navigation"><i class="ri-menu-line ri-lg me-1"></i> 메뉴</span>
+                    </li>
+                    <!-- /Mobile Nav Toggler-->
+
+                    <!-- Upload -->
+                    <li sec:authorize="hasRole('ADMIN')" class="ms-1 d-none d-lg-inline-block">
+                        <a class="nav-link text-body" href="uploadPage">
+                            Upload
+                        </a>
+                    </li>
+                    <!-- /Upload-->
+
+                    <!-- Navbar Search-->
+
+                    <li class="d-none d-sm-block">
+                        <span class="nav-link text-body search-trigger cursor-pointer fw-bold">검색</span>
+                        <!-- Search navbar overlay-->
+                        <div class="navbar-search d-none">
+                            <form th:action="@{search?page=1}" method="post">
+                            <div class="input-group mb-3 h-100">
+                                    <span class="input-group-text px-4 bg-transparent border-0"><i
+                                            class="ri-search-line ri-lg"></i></span>
+                                <input type="text" th:name="product_name" class="form-control text-body bg-transparent border-0"
+                                       placeholder="검색어를 입력하세요.">
+                                <span class="input-group-text px-4 bg-transparent border-0">
+                                    <button type="submit" class="btn btn-dark rounded">검색</button>
+                                </span>
+                                <span class="input-group-text px-4 cursor-pointer disable-child-pointer close-search bg-transparent border-0">
+                                    <i class="ri-close-circle-line ri-lg"></i>
+                                </span>
+                            </div>
+                            </form>
+                        </div>
+                        <div class="search-overlay"></div>
+                        <!-- / Search navbar overlay-->
+                    </li>
+                    <!-- /Navbar Search-->
+
+                    <!-- Navbar Login-->
+                    <li sec:authorize="!isAuthenticated()" class="ms-1 d-none d-lg-inline-block">
+                        <a class="nav-link text-body fw-bold" href="loginPage">
+                            로그인
+                        </a>
+                    </li>
+                    <!-- /Navbar Login-->
+
+                    <!-- Navbar MyPage-->
+                    <li sec:authorize="isAuthenticated()" class="ms-1 d-none d-lg-inline-block">
+                        <a class="nav-link text-body fw-bold" th:href="@{dashboard(orderPage=${1}, mileagePage=${1})}">
+                            마이페이지
+                        </a>
+                    </li>
+                    <!-- /Navbar MyPage-->
+
+                    <!-- Navbar Cart-->
+                    <li sec:authorize="isAuthenticated()" class="ms-1 d-none d-lg-inline-block">
+                        <a class="nav-link text-body fw-bold" href="cart">
+                            장바구니
+                        </a>
+                    </li>
+                    <!-- /Navbar Cart-->
+
+                </ul>
+                <!-- Navbar Icons-->
+
+                <!-- Main Navigation-->
+                <div class="flex-shrink-0 collapse navbar-collapse navbar-collapse-light w-auto flex-grow-1 order-2 order-lg-1"
+                     id="navbarNavDropdown">
+
+                    <!-- Menu-->
+                    <ul class="navbar-nav mx-auto mb-2 mb-lg-0">
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" onclick="location.href='productList?page=1&category_id=1'"  role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                Mens
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li><a class="dropdown-item" th:href="@{productList(page=${1}, category_id=${5})}">Coat</a></li>
+                                <li><a class="dropdown-item" th:href="@{productList(page=${1}, category_id=${6})}">Jacket</a></li>
+                                <li><a class="dropdown-item" th:href="@{productList(page=${1}, category_id=${7})}">Shirt</a></li>
+                                <li><a class="dropdown-item" th:href="@{productList(page=${1}, category_id=${8})}">Tops</a></li>
+                                <li><a class="dropdown-item" th:href="@{productList(page=${1}, category_id=${9})}">Knitwear</a></li>
+                                <li><a class="dropdown-item" th:href="@{productList(page=${1}, category_id=${10})}">Trousers</a></li>
+                                <li><a class="dropdown-item" th:href="@{productList(page=${1}, category_id=${11})}">Jeans</a></li>
+                            </ul>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" onclick="location.href='productList?page=1&category_id=2'" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                Womens
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li><a class="dropdown-item" th:href="@{productList(page=${1}, category_id=${12})}">Coat</a></li>
+                                <li><a class="dropdown-item" th:href="@{productList(page=${1}, category_id=${13})}">Jacket</a></li>
+                                <li><a class="dropdown-item" th:href="@{productList(page=${1}, category_id=${14})}">Shirt</a></li>
+                                <li><a class="dropdown-item" th:href="@{productList(page=${1}, category_id=${15})}">Tops</a></li>
+                                <li><a class="dropdown-item" th:href="@{productList(page=${1}, category_id=${16})}">Knitwear</a></li>
+                                <li><a class="dropdown-item" th:href="@{productList(page=${1}, category_id=${17})}">Trousers</a></li>
+                                <li><a class="dropdown-item" th:href="@{productList(page=${1}, category_id=${18})}">Jeans</a></li>
+                                <li><a class="dropdown-item" th:href="@{productList(page=${1}, category_id=${19})}">Skirts</a></li>
+                                <li><a class="dropdown-item" th:href="@{productList(page=${1}, category_id=${20})}">Dresses</a></li>
+                            </ul>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" onclick="location.href='productList?page=1&category_id=3'" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                Footwear
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li><a class="dropdown-item" th:href="@{productList(page=${1}, category_id=${21})}">Boots</a></li>
+                                <li><a class="dropdown-item" th:href="@{productList(page=${1}, category_id=${22})}">Mules</a></li>
+                                <li><a class="dropdown-item" th:href="@{productList(page=${1}, category_id=${23})}">Shoes</a></li>
+                                <li><a class="dropdown-item" th:href="@{productList(page=${1}, category_id=${24})}">Sneakers</a></li>
+                            </ul>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" onclick="location.href='productList?page=1&category_id=4'" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                Accessories
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li><a class="dropdown-item" th:href="@{productList(page=${1}, category_id=${25})}">Necklace</a></li>
+                                <li><a class="dropdown-item" th:href="@{productList(page=${1}, category_id=${26})}">Belts</a></li>
+                                <li><a class="dropdown-item" th:href="@{productList(page=${1}, category_id=${27})}">Bags</a></li>
+                                <li><a class="dropdown-item" th:href="@{productList(page=${1}, category_id=${28})}">Eyewear</a></li>
+                                <li><a class="dropdown-item" th:href="@{productList(page=${1}, category_id=${29})}">Hats</a></li>
+                                <li><a class="dropdown-item" th:href="@{productList(page=${1}, category_id=${30})}">Jewelery</a></li>
+                            </ul>
+                        </li>
+                    </ul>                    <!-- / Menu-->
+
+                </div>
+                <!-- / Main Navigation-->
+
+            </div>
+        </div>
+    </div>
+</nav>

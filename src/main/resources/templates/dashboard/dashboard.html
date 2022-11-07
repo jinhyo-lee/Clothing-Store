@@ -1,0 +1,210 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<!-- Head -->
+<head th:replace="header :: header">
+</head>
+<body class="">
+
+<style>
+    th, td{
+        height: 60px;
+        vertical-align: middle;
+    }
+    table th{
+        border-color: #e6e6e6;
+    }
+</style>
+
+<!-- Navbar -->
+<nav th:replace="navbar :: navbar">
+</nav>
+
+<!-- Main Section-->
+<section class="mt-0  vh-lg-100">
+    <!-- Page Content Goes Here -->
+    <div class="container">
+        <div class="row g-0 vh-lg-100 d-flex justify-content-center">
+
+            <div class="col-lg-5 pt-3 pt-lg-10" style="margin-left: 3rem;">
+                <div class="pe-lg-5">
+                    <div class="mt-3">
+                        <div class="row">
+                            <!-- Checkout Panel Information-->
+                            <div class="d-flex justify-content-between align-items-center mb-0 border-bottom pb-4" style="padding-left: 0px;">
+                                <h3 class="fs-5 fw-bolder m-0 lh-1">주문 내역</h3>
+                            </div>
+                            <table class="table">
+                                <thead>
+                                <tr>
+                                    <th scope="col" style="border-color: #e6e6e6;">주문 번호</th>
+                                    <th scope="col" style="border-color: #e6e6e6;">일자</th>
+                                    <th scope="col" style="border-color: #e6e6e6;">상품 정보</th>
+                                    <th scope="col" style="border-color: #e6e6e6;">가격</th>
+                                    <th scope="col" style="border-color: #e6e6e6;">상태</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr th:each="order : ${orderList}">
+                                    <th scope="row" th:text="${order.order_id} + '.'"/>
+                                    <td th:text="${order.order_date}"/>
+                                    <td><a th:href="@{orderInfo(order_id=${order.order_id})}" th:text="${order.product_name}"/></td>
+                                    <td th:text="${#numbers.formatInteger(order.price, 0, 'COMMA')} + '원'"></td>
+                                    <td th:text="${order.status}"></td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div th:if="${listCountOrder} > 0" class="card-body">
+                            <ul class="pagination">
+                                <li th:if="${startPageOrder} > 3" class="page-item"><a class="page-link" th:href="@{dashboard(orderPage=${startPageOrder - 3}, mileagePage=${1})}">이전 페이지</a></li>
+                                <th:block th:each="i : ${#numbers.sequence(startPageOrder, endPageOrder)}">
+                                    <li th:if="${i} == pageOrder" class="page-item active"><a class="page-link" th:text="${i}"/></li>
+                                    <li th:if="${i} != pageOrder" class="page-item"><a class="page-link" th:href="@{dashboard(orderPage=${i}, mileagePage=${1})}" th:text="${i}"/></li>
+                                </th:block>
+                                <li th:if="${endPageOrder} < ${pageCountOrder}" class="page-item"><a class="page-link" th:href="@{dashboard(orderPage=${startPageOrder + 3}, mileagePage=${1})}">다음 페이지</a></li>
+                            </ul>
+                        </div>
+                        <div class="row">
+                            <!-- Checkout Panel Information-->
+                            <div class="d-flex justify-content-between align-items-center mb-0 border-bottom pb-4" style="margin-top: 70px; padding-left: 0px;">
+                                <h3 class="fs-5 fw-bolder m-0 lh-1">적립금 내역</h3>
+                                <small class="text-muted fw-bolder" th:text="'보유 적립금 ' + ${#numbers.formatInteger(member.mileage, 0, 'COMMA')} + '원'" style="text-align: right"/>
+                            </div>
+                            <table class="table">
+                                <thead>
+                                <tr>
+                                    <th scope="col" style="border-color: #e6e6e6;">일자</th>
+                                    <th scope="col" style="border-color: #e6e6e6;">금액</th>
+                                    <th scope="col" style="border-color: #e6e6e6;">유형</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr th:each="mileage : ${mileageList}">
+                                    <th scope="row" th:text="${mileage.register}"></td>
+                                    <td th:text="${#numbers.formatInteger(mileage.amount, 0, 'COMMA')} + '원'"></td>
+                                    <td th:text="${mileage.type}"></td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div th:if="${listCountMileage} > 0" class="card-body">
+                            <ul class="pagination">
+                                <li th:if="${startPageMileage} > 3" class="page-item"><a class="page-link" th:href="@{dashboard(orderPage=${1}, mileagePage=${startPageMileage - 3})}">이전 페이지</a></li>
+                                <th:block th:each="i : ${#numbers.sequence(startPageMileage, endPageMileage)}">
+                                <li th:if="${i} == pageMileage" class="page-item active"><a class="page-link" th:text="${i}"/></li>
+                                <li th:if="${i} != pageMileage" class="page-item"><a class="page-link" th:href="@{dashboard(orderPage=${1}, mileagePage=${i})}" th:text="${i}"/></li>
+                                </th:block>
+                                <li th:if="${endPageMileage} < ${pageCountMileage}" class="page-item"><a class="page-link" th:href="@{dashboard(orderPage=${1}, mileagePage=${startPageMileage + 3})}">다음 페이지</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-5 pt-3 pt-lg-10" style="margin-left: 3rem;">
+                <div class="pe-lg-5">
+                    <div class="mt-3 mb-7">
+                        <!-- Checkout Panel Information-->
+                        <div class="d-flex justify-content-between align-items-center mb-4 border-bottom pb-4">
+                            <h3 class="fs-5 fw-bolder m-0 lh-1">회원 정보</h3>
+                            <small class="text-muted fw-bolder"><a href="logout">로그아웃</a></small>
+                        </div>
+                        <form th:action="@{updateMember}" method="post">
+                        <div class="row">
+                            <!-- ID-->
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <label for="update-id" class="form-label">아이디</label>
+                                    <input type="text" class="form-control" id="update-id" placeholder="" th:value="${member.id}" readonly>
+                                </div>
+                            </div>
+
+                            <!-- Name-->
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <label for="update-name" class="form-label">이름</label>
+                                    <input type="text" th:name="name" class="form-control" id="update-name" placeholder="" th:value="${member.name}">
+                                </div>
+                            </div>
+
+                            <!-- Email-->
+                            <div class="col-12">
+                                <div class="form-group">
+                                    <label for="join-email" class="form-label">이메일</label>
+                                    <input type="text" th:name="email" class="form-control" onblur="validateEmail()" id="join-email" th:value="${member.email}">
+                                    <div id="email-message"></div>
+                                </div>
+                            </div>
+
+                            <!-- Contact-->
+                            <div class="col-12">
+                                <div class="form-group">
+                                    <label for="join-contact" class="form-label">연락처</label>
+                                    <input type="text" th:name="contact" class="form-control" onblur="validateContact()" id="join-contact" th:value="${member.contact}">
+                                    <div id="contact-message"></div>
+                                </div>
+                            </div>
+
+                            <div class="col-12">
+                                <label for="join-postcode" class="form-label">우편 번호</label>
+                                <div class="input-group" style="margin-bottom: 2rem;">
+                                    <input type="text" class="form-control" id="join-postcode" readonly>
+                                    <button type="button" class="btn btn-dark btn-sm px-4" onclick="searchAddress()">검색</button>
+                                </div>
+                            </div>
+                            <!-- Address-->
+                            <th:block th:with="address=${#strings.arraySplit(member.address, ',')}">
+                            <div class="col-12">
+                                <div class="form-group">
+                                    <label for="join-address" class="form-label">주소</label>
+                                    <input type="text" th:name="address" class="form-control" id="join-address" th:value="${address[0]}" readonly>
+                                </div>
+                            </div>
+                            <!-- Address Detail-->
+                            <div class="col-12">
+                                <div class="form-group">
+                                    <label for="update-address-detail" class="form-label">상세 주소</label>
+                                    <input type="text" th:name="addressDetail" class="form-control" id="update-address-detail" th:value="${address[1]}">
+                                </div>
+                            </div>
+                            </th:block>
+                        </div>
+                        <div class="pt-3 mt-3 pb-5 border-top">
+                            <div class="text-center mb-3">
+                                <small class="text-muted fw-bolder mx-2"><a href="changePasswordPage">비밀번호 변경하기</a></small>
+                                <small class="text-muted fw-bolder"><a href="quitPage">탈퇴하기</a></small>
+                            </div>
+                            <div class="d-flex justify-content-center">
+                                <button type="submit" href="./checkout-shipping.html" class="btn btn-dark w-50 w-md-auto">
+                                    <th:block th:if="${flag} == null">변경 사항 저장하기</th:block>
+                                    <th:block th:if="${flag}">변경 완료</th:block>
+                                </button>
+                            </div>
+                        </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <!-- /Page Content -->
+</section>
+<!-- / Main Section-->
+
+<!-- Theme JS -->
+<!-- Vendor JS -->
+<script src="/js/vendor.bundle.js"></script>
+
+<!-- Theme JS -->
+<script src="/js/theme.bundle.js"></script>
+
+<!-- Validation -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+<script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+<script src="/js/join.js"></script>
+
+</body>
+
+</html>

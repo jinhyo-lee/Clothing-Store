@@ -1,0 +1,136 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<!-- Head -->
+<head th:replace="header :: header">
+</head>
+<body class="">
+
+<!-- Navbar -->
+<nav th:replace="navbar :: navbar">
+</nav>
+<!-- / Navbar-->
+
+<!-- Main Section-->
+<section class="mt-0  vh-lg-100">
+    <!-- Page Content Goes Here -->
+    <div class="container">
+        <div class="row g-0 vh-lg-100 justify-content-center">
+            <div class="col-lg-7 pt-5 pt-lg-10">
+                <div class="pe-lg-5">
+                    <!-- Checkout Panel Information-->
+                    <div class="d-flex justify-content-between align-items-center mb-4 border-bottom pb-4">
+                        <h3 class="fs-5 fw-bolder m-0 lh-1">Upload Product</h3>
+                    </div>
+                    <form th:action="@{upload}" th:object="${product}" method="post" enctype="multipart/form-data">
+                        <div class="row">
+                            <!-- Product Name-->
+                            <div class="col-12">
+                                <div class="form-group">
+                                    <label for="upload-name" class="form-label">Product Name</label>
+                                    <input type="text" th:field="*{product_name}" class="form-control" id="upload-name" placeholder="Enter product name" required>
+                                </div>
+                            </div>
+                            <!-- Category-->
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="upload-category" class="form-label">Category</label>
+                                    <select th:name="parent_id" class="form-select" id="upload-category" required>
+                                        <option value="" selected disabled>Select category</option>
+                                        <option value="1">Mens</option>
+                                        <option value="2">Womens</option>
+                                        <option value="3">Footwear</option>
+                                        <option value="4">Accessories</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <!-- Sub Category-->
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="upload-subcategory" class="form-label">Sub Category</label>
+                                    <select th:name="category_name" class="form-select" id="upload-subcategory" required>
+                                        <option value="" selected disabled>Category selection required</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <!-- Detail-->
+                            <div class="col-12">
+                                <div class="form-group">
+                                    <label for="upload-detail" class="form-label">Detail</label>
+                                    <textarea th:field="*{detail}" class="form-control" id="upload-detail" rows="6" required="" style="resize: none" placeholder="Enter detailed info"></textarea>
+                                </div>
+                            </div>
+
+                            <!-- Material-->
+                            <div class="col-12">
+                                <div class="form-group">
+                                    <label for="upload-material" class="form-label">Material</label>
+                                    <textarea th:field="*{material}" class="form-control" id="upload-material" rows="3" required="" style="resize: none" placeholder="Enter material info"></textarea>
+                                </div>
+                            </div>
+
+                            <!-- Size Variation-->
+                            <div class="col-12">
+                                <label for="upload-size" class="form-label">Size variation</label>
+                                <div class="form-group" id="upload-size">
+                                    <div th:each="i : ${#numbers.sequence(1, 6)}" class="form-group d-inline-block mb-2 form-check-bg form-check-custom" style="margin-right: 15px;">
+                                        <input type="checkbox" th:name="size" th:id="${i}" class="form-check-bg" th:value="${i}">
+                                        <label class="form-check-label fw-normal" th:for="${i}" th:text="${i}"></label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Stock Quantity-->
+                            <div class="col-md-6">
+                                <label for="upload-quantity" class="form-label">Stock quantity</label>
+                                <div class="form-group" id="upload-quantity">
+                                    <input type="number" th:name="quantity" min="0" max="200" step="10" class="form-control" value="0" required>
+                                </div>
+                            </div>
+
+                            <!-- Price-->
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="upload-price" class="form-label">Price</label>
+                                    <input type="text" th:field="*{price}" class="form-control" id="upload-price" placeholder="Set price" required>
+                                </div>
+                            </div>
+
+                            <!-- Image-->
+                            <div class="col-12">
+                                <div class="form-group">
+                                    <label for="upload-image" class="form-label">Image</label>
+                                    <input type="file" class="form-control" th:name="file" id="upload-image" multiple>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="pt-5 mt-5 pb-5 border-top d-flex justify-content-md-end align-items-center">
+                            <button type="submit" class="btn btn-dark w-100 w-md-auto">Upload Product</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- /Page Content -->
+</section>
+<!-- / Main Section-->
+
+
+<!-- Theme JS -->
+<!-- Vendor JS -->
+<script src="/js/vendor.bundle.js"></script>
+
+<!-- Theme JS -->
+<script src="/js/theme.bundle.js"></script>
+
+<!-- Upload -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+<script src="/js/upload.js"></script>
+
+</body>
+
+</html>
